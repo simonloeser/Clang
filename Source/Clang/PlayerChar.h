@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InputAction.h"
 #include "GameFramework/Character.h"
 #include "PlayerChar.generated.h"
 
@@ -18,8 +19,11 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Spawning")
         void SpawnActor();
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Spawning")
 	TSubclassOf<AActor> ActorBPToSpawn;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* JumpAction;
 
 protected:
 	// Called when the game starts or when spawned

@@ -2,13 +2,13 @@
 
 
 #include "PlayerChar.h"
+#include "EnhancedInputComponent.h"
 
 // Sets default values
-APlayerChar::APlayerChar()
+APlayerChar::APlayerChar(): JumpAction(nullptr)
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
@@ -30,6 +30,14 @@ void APlayerChar::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		if (JumpAction)
+		{
+			EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &APlayerChar::Jump);
+			EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &APlayerChar::StopJumping);
+		}
+	}
 }
 
 void APlayerChar::SpawnActor()
