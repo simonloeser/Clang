@@ -23,11 +23,20 @@ public:
 	TSubclassOf<AActor> ActorBPToSpawn;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputAction* JumpAction;
+	UInputAction* IAJumpAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* IAMoveAction;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable, Category = "Input")
+		void Move();
+
+private:
+	struct FEnhancedInputActionValueBinding* MoveActionBinding;
 
 public:	
 	// Called every frame
