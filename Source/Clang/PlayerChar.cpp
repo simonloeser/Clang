@@ -3,7 +3,6 @@
 
 #include "PlayerChar.h"
 #include "EnhancedInputComponent.h"
-#include "EnhancedInputSubsystems.h"
 
 // Sets default values
 APlayerChar::APlayerChar(): IAJumpAction(nullptr), IAMoveAction(nullptr), MoveActionBinding(nullptr)
@@ -50,19 +49,31 @@ void APlayerChar::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 void APlayerChar::Move()
 {
 	const FVector2D InputValue = MoveActionBinding->GetValue().Get<FVector2D>();
-	//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Emerald, InputValue.ToString());
-	//UE_LOG(LogTemp, Log, TEXT("Test"));
 }
 
 void APlayerChar::SpawnActor()
 {
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	FVector ForwardVectorPosition = GetActorLocation() + GetActorForwardVector() * 250.0f;
 	
+	//USceneComponent* SceneComp = CreateDefaultSubobject<USceneComponent>(TEXT("SpawnComp"));
+	//SceneComp->SetupAttachment(RootComponent);
+
 	FTransform SpawnTransform = GetActorTransform();
-	SpawnTransform.SetLocation(GetActorForwardVector());
+	SpawnTransform.SetLocation(ForwardVectorPosition);
 	
-	GetWorld()->SpawnActor<AActor>(ActorBPToSpawn, SpawnTransform, SpawnParams);
-	//UE_LOG(LogTemp, Log, TEXT("Test: %s"), SpawnParams);
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, FString::Printf(TEXT("Object spawned at %s"), TEXT("Hello world")));
+	if (GetWorld()->SpawnActor<AActor>(ActorBPToSpawn, SpawnTransform, SpawnParams))
+	{
+		UE_LOG(LogTemp, Log, TEXT("Actor spawned successfully at location: %s"), *ForwardVectorPosition.ToString());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to spawn actor."));
+	}
+	
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, this->GetActorLocation().ToString());
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, this->GetActorForwardVector().ToString());
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, SpawnTransform.GetLocation().ToString());
 }
