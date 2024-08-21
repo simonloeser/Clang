@@ -49,6 +49,7 @@ void APlayerChar::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 void APlayerChar::Move()
 {
 	const FVector2D InputValue = MoveActionBinding->GetValue().Get<FVector2D>();
+	
 }
 
 void APlayerChar::SpawnActor()
